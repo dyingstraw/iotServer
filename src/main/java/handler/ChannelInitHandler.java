@@ -12,7 +12,13 @@ import io.netty.channel.socket.SocketChannel;
 public class ChannelInitHandler extends ChannelInitializer<SocketChannel> {
     @Override
     protected void initChannel(SocketChannel socketChannel) throws Exception {
+
+
         socketChannel.pipeline().addLast(new CountHandler());
-        socketChannel.pipeline().addLast(new MessageHandler());
+        socketChannel.pipeline().addFirst(new RecordHandler());
+        socketChannel.pipeline().addFirst(new AuthHandle());
+        socketChannel.pipeline().addFirst(new BeforeHandler());
+        socketChannel.pipeline().addFirst(new MyDecode());
+        socketChannel.pipeline().addFirst(new MyEncoder());
     }
 }

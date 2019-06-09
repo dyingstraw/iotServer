@@ -1,10 +1,10 @@
 package handler;
 
-import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.channel.SimpleChannelInboundHandler;
+import lombok.extern.slf4j.Slf4j;
+import model.message.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,11 +15,13 @@ import org.slf4j.LoggerFactory;
  * @create: 2019-05-13 20:46
  **/
 @ChannelHandler.Sharable
+@Slf4j
 public class MessageHandler extends SimpleChannelInboundHandler<String> {
-    Logger logger = LoggerFactory.getLogger(getClass());
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-
+        if (((Message)msg).getData().equals("hwcao")){
+            ctx.writeAndFlush(new Message());
+        }
 
         super.channelRead(ctx, msg);
     }
@@ -29,7 +31,7 @@ public class MessageHandler extends SimpleChannelInboundHandler<String> {
         // ByteBuf copy = ((ByteBuf) msg).copy();
         // byte[] buff = new byte[copy.readableBytes()];
         // copy.getBytes(copy.readerIndex(),buff);
-        logger.info(msg);
+        log.info(msg);
     }
 
     @Override

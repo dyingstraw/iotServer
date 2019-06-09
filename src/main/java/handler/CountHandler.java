@@ -3,6 +3,7 @@ package handler;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import service.StatusService;
@@ -16,8 +17,8 @@ import java.io.IOException;
  * @create: 2019-05-12 14:58
  **/
 @ChannelHandler.Sharable
+@Slf4j
 public class CountHandler extends ChannelInboundHandlerAdapter {
-    Logger logger = LoggerFactory.getLogger(getClass());
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         StatusService.INSTANCE.increaseAliveConnection(1);
@@ -33,6 +34,7 @@ public class CountHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+        log.info("CountHandler");
         super.channelRead(ctx, msg);
     }
 
@@ -45,7 +47,7 @@ public class CountHandler extends ChannelInboundHandlerAdapter {
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
         // StatusService.INSTANCE.decreaseAliveConnection(1);
         if (cause instanceof IOException){
-            logger.debug(cause.toString());
+            log.info(cause.toString());
         }
         // super.exceptionCaught(ctx, cause);
     }
