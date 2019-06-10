@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import model.dto.AuthDTO;
 import model.dto.RespDto;
 import model.message.Message;
+import service.AuthService;
 
 /**
  * @program: netty_study
@@ -17,11 +18,15 @@ import model.message.Message;
  **/
 @Slf4j
 public class AuthHandle extends ChannelInboundHandlerAdapter {
+
+    AuthService authService = AuthService.getInstance();
+
     @Override
     public void channelRead(final ChannelHandlerContext ctx, Object msg) throws Exception {
         log.info("AuthHandle");
+        // 鉴权
         if (AuthDTO.class.isInstance(msg)){
-            if (((AuthDTO)(msg)).getDevId()==1 && ((AuthDTO)(msg)).getDevKey().equals("123456")){
+            if (authService.isExit((AuthDTO)msg)){
                 ctx.pipeline().remove(this);
                 Message<RespDto>message = new Message();
                 message.setCmd((byte) 0);

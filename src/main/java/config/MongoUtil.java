@@ -51,6 +51,14 @@ public class MongoUtil {
 
         return recordCollection;
     }
+    public static MongoCollection<Document> getRecordCollection(String name){
+        if (recordCollection!=null){
+            return recordCollection;
+        }
+        recordCollection = getInstance().getDatabase("iot").getCollection(name);
+
+        return recordCollection;
+    }
     public static Document objectToDocument(Object o){
         String str = JSON.toJSONString(o);
         return Document.parse(str);
