@@ -26,6 +26,7 @@ public class BeforeHandler extends ChannelInboundHandlerAdapter {
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         log.info("BeforeHandler");
         String jsonStr = new String(ByteBufUtil.getBytes((ByteBuf) msg));
+        log.info("jsonstr:"+jsonStr);
         Message<String> jo = JSONObject.parseObject(jsonStr,new TypeReference<Message<String>>(){});
         if (jo.getCmd()==0){
             AuthDTO authDTO = JSONObject.parseObject(jo.getData(),new TypeReference<AuthDTO>(){});

@@ -25,10 +25,10 @@ public class AuthHandle extends ChannelInboundHandlerAdapter {
     public void channelRead(final ChannelHandlerContext ctx, Object msg) throws Exception {
         log.info("AuthHandle");
         // 鉴权
-        if (AuthDTO.class.isInstance(msg)){
-            if (authService.isExit((AuthDTO)msg)){
+        if (AuthDTO.class.isInstance(msg)) {
+            if (authService.isExit((AuthDTO) msg, true)) {
                 ctx.pipeline().remove(this);
-                Message<RespDto>message = new Message();
+                Message<RespDto> message = new Message();
                 message.setCmd((byte) 0);
                 message.setVersion((byte) 0);
                 message.setData(RespDto.SUCCESS());
@@ -38,28 +38,28 @@ public class AuthHandle extends ChannelInboundHandlerAdapter {
                         log.info("认证成功");
                     }
                 });
-            }else {
+            } else {
                 log.info("auth failed");
-                Message<RespDto>message = new Message();
+                Message<RespDto> message = new Message();
                 message.setCmd((byte) 0);
                 message.setVersion((byte) 0);
                 message.setData(RespDto.FAILED("认证失败"));
                 ChannelFuture f = ctx.writeAndFlush(message);
-                f.addListener(new ChannelFutureListener(){
+                f.addListener(new ChannelFutureListener() {
                     public void operationComplete(ChannelFuture future) throws Exception {
                         log.info("认证失败");
                         ctx.close();
                     }
                 });
             }
-        }else {
-            Message<RespDto>message = new Message();
+        } else {
+            Message<RespDto> message = new Message();
             message.setCmd((byte) 0);
             message.setVersion((byte) 0);
 
             message.setData(RespDto.FAILED("还未认证"));
             ChannelFuture f = ctx.writeAndFlush(message);
-            f.addListener(new ChannelFutureListener(){
+            f.addListener(new ChannelFutureListener() {
                 public void operationComplete(ChannelFuture future) throws Exception {
                     log.info("还未认证");
                     ctx.close();
