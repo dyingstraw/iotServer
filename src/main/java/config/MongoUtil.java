@@ -22,6 +22,9 @@ public class MongoUtil {
     private static MongoClient instance = null;
     private static MongoCollection recordCollection;
 
+
+
+
     private MongoUtil(){}
 
     public static MongoClient getInstance(){
