@@ -18,9 +18,15 @@ public class RespDto {
     }
 
     public static RespDto SUCCESS(){
-        return new RespDto(200,"failed");
+        return new RespDto(200,"success");
     }
     public static RespDto FAILED(String msg){
+        return new RespDto(400,msg);
+    }
+    public static RespDto success(){
+        return new RespDto(200,"success");
+    }
+    public static RespDto failed(String msg){
         return new RespDto(400,msg);
     }
 

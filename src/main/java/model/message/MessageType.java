@@ -1,11 +1,35 @@
 package model.message;
 
-public final class MessageType {
-    final int VERSION_01 = '1';
-    final int VERSION_02 = '2';
+public enum  MessageType {
+    VERSION_01(1,"v1"),
+    VERSION_02(2,"v2"),
+    LOGIN(0,"login"),
 
-    final int SEND2USER = '0';
-    final int SEND2GROUP = '1';
-    final int LOGIN = '2';
-    final int LOGOUT = '3';
+
+    SEND(1,"send"),
+    RESP(9,"resp"),
+    CONTROL(8,"ctrl");
+
+    private Integer key;
+    private String value;
+    MessageType(Integer key,String value) {
+        this.key = key;
+        this.value = value;
+    }
+
+    public Integer getKey() {
+        return key;
+    }
+
+    public void setKey(Integer key) {
+        this.key = key;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
+    }
 }

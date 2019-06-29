@@ -44,7 +44,6 @@ public class ServerMain {
             @Override
             public void callback() {
                 run(args);
-
             }
         };
         zookeeperUtil.zkRegist();

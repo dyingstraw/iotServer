@@ -28,11 +28,11 @@ public class AuthHandle extends ChannelInboundHandlerAdapter {
         if (AuthDTO.class.isInstance(msg)) {
             if (authService.isExit((AuthDTO) msg, true)) {
                 ctx.pipeline().remove(this);
-                Message<RespDto> message = new Message();
-                message.setCmd((byte) 0);
-                message.setVersion((byte) 0);
-                message.setData(RespDto.SUCCESS());
-                ChannelFuture f = ctx.writeAndFlush(message);
+                // Message<RespDto> message = new Message();
+                // message.setCmd( 0);
+                // message.setVersion(0);
+                // message.setData(true);
+                ChannelFuture f = ctx.writeAndFlush(Message.success());
                 f.addListener(new ChannelFutureListener() {
                     public void operationComplete(ChannelFuture future) throws Exception {
                         log.info("认证成功");
@@ -40,11 +40,11 @@ public class AuthHandle extends ChannelInboundHandlerAdapter {
                 });
             } else {
                 log.info("auth failed");
-                Message<RespDto> message = new Message();
-                message.setCmd((byte) 0);
-                message.setVersion((byte) 0);
-                message.setData(RespDto.FAILED("认证失败"));
-                ChannelFuture f = ctx.writeAndFlush(message);
+                // Message<RespDto> message = new Message();
+                // message.setCmd(0);
+                // message.setVersion(0);
+                // message.setData(RespDto.FAILED("认证失败"));
+                ChannelFuture f = ctx.writeAndFlush(Message.failed());
                 f.addListener(new ChannelFutureListener() {
                     public void operationComplete(ChannelFuture future) throws Exception {
                         log.info("认证失败");
@@ -54,8 +54,8 @@ public class AuthHandle extends ChannelInboundHandlerAdapter {
             }
         } else {
             Message<RespDto> message = new Message();
-            message.setCmd((byte) 0);
-            message.setVersion((byte) 0);
+            message.setCmd((int) 0);
+            message.setVersion((int) 0);
 
             message.setData(RespDto.FAILED("还未认证"));
             ChannelFuture f = ctx.writeAndFlush(message);
