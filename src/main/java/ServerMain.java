@@ -40,6 +40,9 @@ public class ServerMain {
     }
 
     public static void main(final String[] args) throws InterruptedException, IOException, KeeperException {
+        /**
+         * 启动zk，注册服务，注册成功后启动服务器
+         */
         ZookeeperUtil zookeeperUtil = new ZookeeperUtil(){
             @Override
             public void callback() {
@@ -47,7 +50,6 @@ public class ServerMain {
             }
         };
         zookeeperUtil.zkRegist();
-
         LOCK.lock();
         STOP.await();
     }

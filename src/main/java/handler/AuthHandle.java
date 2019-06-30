@@ -9,6 +9,7 @@ import model.dto.AuthDTO;
 import model.dto.RespDto;
 import model.message.Message;
 import service.AuthService;
+import util.ZookeeperUtil;
 
 /**
  * @program: netty_study
@@ -26,14 +27,24 @@ public class AuthHandle extends ChannelInboundHandlerAdapter {
         log.info("AuthHandle");
         // 鉴权
         if (AuthDTO.class.isInstance(msg)) {
+
+            /*先判断负载是否均衡均衡，如果本机服务可以直接接受设备连接，则认证成功，
+            * 如果本机不接受此设备，则下发给设备重新认证的命令
+            *
+            * */
+            log.info("{}",ZookeeperUtil.getChildren());
+
+            if (ZookeeperUtil.getChildren()!=null && ZookeeperUtil.getChildren().size()>1){
+                log.info("负载均衡：{}",ZookeeperUtil.getChildren());
+            }
+
+
+
             if (authService.isExit((AuthDTO) msg, true)) {
                 ctx.pipeline().remove(this);
-                // Message<RespDto> message = new Message();
-                // message.setCmd( 0);
-                // message.setVersion(0);
-                // message.setData(true);
                 ChannelFuture f = ctx.writeAndFlush(Message.success());
                 f.addListener(new ChannelFutureListener() {
+                    @Override
                     public void operationComplete(ChannelFuture future) throws Exception {
                         log.info("认证成功");
                     }
@@ -46,6 +57,7 @@ public class AuthHandle extends ChannelInboundHandlerAdapter {
                 // message.setData(RespDto.FAILED("认证失败"));
                 ChannelFuture f = ctx.writeAndFlush(Message.failed());
                 f.addListener(new ChannelFutureListener() {
+                    @Override
                     public void operationComplete(ChannelFuture future) throws Exception {
                         log.info("认证失败");
                         ctx.close();
@@ -60,6 +72,7 @@ public class AuthHandle extends ChannelInboundHandlerAdapter {
             message.setData(RespDto.FAILED("还未认证"));
             ChannelFuture f = ctx.writeAndFlush(message);
             f.addListener(new ChannelFutureListener() {
+                @Override
                 public void operationComplete(ChannelFuture future) throws Exception {
                     log.info("还未认证");
                     ctx.close();

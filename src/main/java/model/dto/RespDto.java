@@ -1,5 +1,7 @@
 package model.dto;
 
+import config.ErrorCode;
+
 import java.security.PublicKey;
 
 /**
@@ -9,12 +11,22 @@ import java.security.PublicKey;
  * @create: 2019-06-09 16:11
  **/
 public class RespDto {
+    /**
+     * 回复码
+     */
     private Integer code;
+    /**
+     * 回复信息
+     */
     private String msg;
 
     public RespDto(Integer code, String msg) {
         this.code = code;
         this.msg = msg;
+    }
+    public RespDto(ErrorCode errorCode) {
+        this.code = errorCode.getCode();
+        this.msg = errorCode.getMessage();
     }
 
     public static RespDto SUCCESS(){

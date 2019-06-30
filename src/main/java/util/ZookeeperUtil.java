@@ -1,6 +1,7 @@
 package util;
 
 import com.sun.corba.se.impl.activation.ServerMain;
+import exception.CustomException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.zookeeper.*;
 import org.apache.zookeeper.data.Stat;
@@ -8,8 +9,10 @@ import org.apache.zookeeper.data.Stat;
 import java.io.IOException;
 import java.net.Inet4Address;
 import java.net.NetworkInterface;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.Vector;
 import java.util.concurrent.CountDownLatch;
 
 /**
@@ -22,6 +25,16 @@ import java.util.concurrent.CountDownLatch;
 public class ZookeeperUtil implements Watcher {
 
     private CountDownLatch countDownLatch = new CountDownLatch(1);
+    private static ZooKeeper zooKeeper;
+    private static List<String> children = new Vector<String>();
+
+
+    public static List<String> getChildren() throws CustomException {
+        if (zooKeeper==null || children==null){
+            throw new CustomException("zk还未启动！");
+        }
+        return children;
+    }
 
     public void callback(){
 
@@ -29,25 +42,41 @@ public class ZookeeperUtil implements Watcher {
 
 
     public void zkRegist() throws IOException, KeeperException, InterruptedException {
-        ZooKeeper zooKeeper = new ZooKeeper(ConfigUtil.get("app.zk.addr"), 3000, this);
+        zooKeeper = new ZooKeeper(ConfigUtil.get("app.zk.addr"), 3000, this);
         countDownLatch.await();
         String appName = ConfigUtil.get("app.name");
         String s = zooKeeper.create("/iot/what/" + appName, "1234".getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL);
-        log.info("1111111111{}", s);
+        List<String> cs = zooKeeper.getChildren("/iot/what",true);
+
+        log.info("zk 服务注册成功,已注册的服务有：\n{}", cs);
 
     }
 
+    @Override
     public void process(WatchedEvent watchedEvent) {
 
         if (watchedEvent.getState()==Event.KeeperState.SyncConnected){
-            countDownLatch.countDown();
-            log.info("已经注册到注册中心，将要启动netty线程！");
-            callback();
+            if (Event.EventType.None == watchedEvent.getType() && null==watchedEvent.getPath()) {
+                countDownLatch.countDown();
+                log.info("已经注册到注册中心，将要启动netty线程！");
+                callback();
+            /**
+             * 有服务注册的时候更新服务列表
+             */
+            }else if (watchedEvent.getType() == Event.EventType.NodeChildrenChanged){
+                log.info("孩子节点变化!");
+                try {
+                    children = zooKeeper.getChildren("/iot/what" ,true);
+                    log.info("当前服务列表：\n{}",children);
+                } catch (KeeperException e) {
+                    e.printStackTrace();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+
+
         }
 
     }
-
-    // public static void main(String[] args) throws InterruptedException, IOException, KeeperException {
-    //     new ZookeeperUtil().zkRegist();
-    // }
 }

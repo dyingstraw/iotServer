@@ -6,6 +6,8 @@ public enum  MessageType {
     LOGIN(0,"login"),
 
 
+
+    REDIRECT(3,"Redirect"),
     SEND(1,"send"),
     RESP(9,"resp"),
     CONTROL(8,"ctrl");
