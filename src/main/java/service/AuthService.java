@@ -14,6 +14,8 @@ import org.bson.BsonDocument;
 import org.bson.Document;
 import org.springframework.util.StreamUtils;
 import org.springframework.util.StringUtils;
+import util.CommonUtil;
+import util.ConfigUtil;
 import util.RedisUtil;
 import util.ZookeeperUtil;
 
@@ -72,6 +74,9 @@ public class AuthService {
                 @Override
                 public void operationComplete(ChannelFuture future) throws Exception {
                     log.info("认证成功信息发送成功");
+                    RedisUtil.getJedis().hset("dev_"+authDTO.getDevId().toString(), "host",ConfigUtil.get("app.name"));
+                    // 设置设备超时登陆时间60s
+                    RedisUtil.getJedis().expire("dev_"+authDTO.getDevId(),60);
                 }
             });
         } else {
