@@ -14,6 +14,8 @@ import redis.clients.jedis.commands.*;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.Arrays;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  * @program: netty_study
@@ -51,6 +53,16 @@ public class RedisUtil   {
             }
         });
         return (Jedis) enhancer.create();
+    }
+
+    public static long writeMap2Redis(String key,Map<String,String> map){
+        Long count=0L;
+        Iterator<Map.Entry<String, String>> it = map.entrySet().iterator();
+        while (it.hasNext()){
+            Map.Entry<String, String> temp = it.next();
+            count +=getJedis().hset(key,temp.getKey(),temp.getValue());
+        }
+        return count;
     }
 
 

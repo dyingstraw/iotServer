@@ -8,6 +8,8 @@ import org.apache.zookeeper.KeeperException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
+import service.RunTimeStatusService;
+import service.impl.RunTimeStatusServiceImpl;
 import util.*;
 
 import java.io.IOException;
@@ -22,6 +24,8 @@ import java.util.concurrent.locks.ReentrantLock;
  **/
 public class ServerMain {
     private static Logger logger = LoggerFactory.getLogger("Main");
+
+    private static RunTimeStatusService runTimeStatusService = RunTimeStatusServiceImpl.getINSTANCE();
     private static final ReentrantLock LOCK = new ReentrantLock();
     private static final Condition STOP = LOCK.newCondition();
     public static void run(String[] args) {
@@ -52,8 +56,9 @@ public class ServerMain {
                 // 将本服务器的状态存储在redis
                 RunTimeStatus status = RuntimeUtil.getRunTimeStatus();
                 status.setActive(0);
-                logger.info("服务器的状态{}",status);
-                RedisUtil.getJedis().hset(ConfigUtil.get("app.name"), CommonUtil.beanToMap(status));
+                status.setAddr(ConfigUtil.get("app.name"));
+                logger.info("服务器的状态{}",CommonUtil.beanToMap(status));
+                RedisUtil.writeMap2Redis(ConfigUtil.get("app.name"), CommonUtil.beanToMap(status));
             }
         };
         zookeeperUtil.zkRegist();

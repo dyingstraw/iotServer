@@ -1,7 +1,12 @@
 package service;
 
+import model.RunTimeStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import util.CommonUtil;
+import util.ConfigUtil;
+import util.RedisUtil;
+import util.RuntimeUtil;
 
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -23,9 +28,12 @@ public class StatusService {
     private ScheduledThreadPoolExecutor scheduledThreadPoolExecutor;
     public final static StatusService INSTANCE = new StatusService();
 
+
+
     private StatusService() {
         scheduledThreadPoolExecutor = new ScheduledThreadPoolExecutor(2);
         Runnable task = new Runnable() {
+            @Override
             public void run() {
                 runningTime++;
                 // logger.info(INSTANCE.toString());
@@ -34,6 +42,11 @@ public class StatusService {
         scheduledThreadPoolExecutor.scheduleWithFixedDelay(task,0,2000, TimeUnit.MILLISECONDS);
     }
 
+    public void refreshRuntimeServerStatus(){
+        RunTimeStatus status = RuntimeUtil.getRunTimeStatus();
+        status.setActive(getConnectionCount());
+        RedisUtil.writeMap2Redis(ConfigUtil.get("app.name"), CommonUtil.beanToMap(status));
+    }
     public synchronized int increaseAliveConnection(int num){
         this.aliveConnection+=num;
         return aliveConnection;

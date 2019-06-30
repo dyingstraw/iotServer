@@ -1,10 +1,13 @@
+import model.RunTimeStatus;
 import model.message.Message;
 import org.springframework.beans.BeanUtils;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 import redis.clients.jedis.commands.JedisCommands;
+import util.CommonUtil;
 import util.RedisUtil;
+import util.RuntimeUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,13 +32,11 @@ public class RedisTest {
 
     public static void main(String[] args) {
 
+        RunTimeStatus status = RuntimeUtil.getRunTimeStatus();
 
-        RedisUtil redisUtil = new RedisUtil();
-        Jedis r =redisUtil.getJedis();
-        for (int i = 0; i < 100; i++) {
-            r.hset("auth",String.valueOf(i),"123456");
-        }
-
+        Map<String,String>map = new HashMap<>();
+        long r =RedisUtil.writeMap2Redis("test",CommonUtil.beanToMap(status));
+        System.out.println(r);
     }
 
 }

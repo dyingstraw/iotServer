@@ -11,6 +11,10 @@ import lombok.Data;
 @Data
 public class RunTimeStatus {
 
+    /**
+     * 服务地址
+     */
+    private String addr;
     /*
     连接数
      */
