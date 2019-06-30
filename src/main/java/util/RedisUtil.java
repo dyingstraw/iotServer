@@ -23,35 +23,26 @@ import java.util.Arrays;
  **/
 @Slf4j
 public class RedisUtil   {
-
-
-
-
-
     private static JedisPool jedisPool ;
-    private static RedisUtil INSTANCE = new RedisUtil();
-
-    public static RedisUtil getINSTANCE() {
-        return INSTANCE;
+    static  {
+        JedisPoolConfig config = new JedisPoolConfig();
+        config.setTestWhileIdle(false);
+        config.setTimeBetweenEvictionRunsMillis(-1);
+        jedisPool=new JedisPool(config,"192.168.1.102",6379,3000,"dyingstraw");
+        log.info("redis is running");
     }
 
     private static Jedis getResource(){
         Jedis jedis = jedisPool.getResource();
         return jedis;
     }
-    public RedisUtil() {
-        super();
-        JedisPoolConfig config = new JedisPoolConfig();
-        config.setTestWhileIdle(false);
-        config.setTimeBetweenEvictionRunsMillis(-1);
-        jedisPool=new JedisPool(config,"192.168.1.102",6379,3000,"dyingstraw");
-    }
 
-    public Jedis getJedis(){
+    public static Jedis getJedis(){
         final Jedis jedis = getResource();
         Enhancer enhancer = new Enhancer();
         enhancer.setSuperclass(jedis.getClass());
         enhancer.setCallback(new InvocationHandler() {
+            @Override
             public Object invoke(Object o, Method method, Object[] objects) throws Throwable {
                 Object result = method.invoke(jedis, objects);
                 log.info("active:{}",jedisPool.getNumActive());

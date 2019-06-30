@@ -3,13 +3,17 @@ package service;
 import com.mongodb.client.FindIterable;
 import config.Key;
 import config.MongoUtil;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelFutureListener;
 import lombok.extern.slf4j.Slf4j;
 import model.dto.AuthDTO;
+import model.message.Message;
 import org.bson.BsonDocument;
 import org.bson.Document;
 import org.springframework.util.StreamUtils;
 import org.springframework.util.StringUtils;
 import util.RedisUtil;
+import util.ZookeeperUtil;
 
 /**
  * @program: netty_study
@@ -41,7 +45,7 @@ public class AuthService {
                 return true;
             }
         }else {
-            String key = RedisUtil.getINSTANCE().getJedis().hget(Key.AUTH.getValue(), authDTO.getDevId().toString());
+            String key = RedisUtil.getJedis().hget(Key.AUTH.getValue(), authDTO.getDevId().toString());
             log.info("2222:{}",key);
             if (!StringUtils.isEmpty(key)){
                 return key.equals(authDTO.getDevKey());
@@ -50,13 +54,7 @@ public class AuthService {
         return false;
     }
 
-    // public static void main(String[] args) {
-    //     AuthDTO authDTO = new AuthDTO();
-    //     authDTO.setDevId(1L);
-    //     authDTO.setDevKey("1234567");
-    //     System.out.println(new AuthService().isExit(authDTO));
-    //
-    //
-    //
-    // }
+    public void auth(AuthDTO authDTO){
+
+    }
 }

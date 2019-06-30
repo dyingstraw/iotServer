@@ -3,10 +3,12 @@ import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import model.RunTimeStatus;
 import org.apache.zookeeper.KeeperException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import util.ZookeeperUtil;
+import org.springframework.beans.BeanUtils;
+import util.*;
 
 import java.io.IOException;
 import java.util.concurrent.locks.Condition;
@@ -47,6 +49,11 @@ public class ServerMain {
             @Override
             public void callback() {
                 run(args);
+                // 将本服务器的状态存储在redis
+                RunTimeStatus status = RuntimeUtil.getRunTimeStatus();
+                status.setActive(0);
+                logger.info("服务器的状态{}",status);
+                RedisUtil.getJedis().hset(ConfigUtil.get("app.name"), CommonUtil.beanToMap(status));
             }
         };
         zookeeperUtil.zkRegist();

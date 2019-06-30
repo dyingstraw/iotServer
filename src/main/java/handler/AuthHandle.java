@@ -9,6 +9,7 @@ import model.dto.AuthDTO;
 import model.dto.RespDto;
 import model.message.Message;
 import service.AuthService;
+import service.BlanceService;
 import util.ZookeeperUtil;
 
 /**
@@ -21,6 +22,7 @@ import util.ZookeeperUtil;
 public class AuthHandle extends ChannelInboundHandlerAdapter {
 
     AuthService authService = AuthService.getInstance();
+    BlanceService blanceService = BlanceService.getInstance();
 
     @Override
     public void channelRead(final ChannelHandlerContext ctx, Object msg) throws Exception {
@@ -36,6 +38,10 @@ public class AuthHandle extends ChannelInboundHandlerAdapter {
 
             if (ZookeeperUtil.getChildren()!=null && ZookeeperUtil.getChildren().size()>1){
                 log.info("负载均衡：{}",ZookeeperUtil.getChildren());
+
+
+
+
             }
 
 
