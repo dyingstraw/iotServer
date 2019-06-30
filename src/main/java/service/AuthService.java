@@ -71,16 +71,16 @@ public class AuthService {
             f.addListener(new ChannelFutureListener() {
                 @Override
                 public void operationComplete(ChannelFuture future) throws Exception {
-                    log.info("认证成功");
+                    log.info("认证成功信息发送成功");
                 }
             });
         } else {
             log.info("auth failed");
-            ChannelFuture f = ctx.writeAndFlush(Message.failed());
+            ChannelFuture f = ctx.writeAndFlush(Message.failed("authentic failed"));
             f.addListener(new ChannelFutureListener() {
                 @Override
                 public void operationComplete(ChannelFuture future) throws Exception {
-                    log.info("认证失败");
+                    log.info("认证失败信息发送成功");
                     ctx.close();
                 }
             });

@@ -1,5 +1,6 @@
 package model.message;
 
+import config.ErrorCode;
 import lombok.Data;
 
 /**
@@ -12,6 +13,7 @@ import lombok.Data;
 public class Message<T> {
     private Integer version;
     private Integer cmd;
+    private Integer code;
     private T data;
 
     public Message() {
@@ -28,13 +30,22 @@ public class Message<T> {
         this.cmd = cmd;
         this.data = data;
     }
-
-    public static Message<Boolean> success() {
-        return new Message<Boolean>(MessageType.RESP.getKey(), new Boolean(true));
+    public Message(Integer cmd,Integer version,Integer code, T data) {
+        this.version = 1;
+        this.cmd = MessageType.RESP.getKey();
+        this.data = data;
+        this.code = code;
     }
 
-    public static Message<Boolean> failed() {
-        return new Message<Boolean>(MessageType.RESP.getKey(), new Boolean(false));
+    public static Message success() {
+        return new Message<Boolean>(MessageType.RESP.getKey(), 1, ErrorCode.SUCCESS.getCode(),true);
+    }
+
+    public static Message failed() {
+        return new Message<Boolean>(MessageType.RESP.getKey(), 1, ErrorCode.FAILED.getCode(),false);
+    }
+    public static Message failed(String cause) {
+        return new Message(MessageType.RESP.getKey(), 1, ErrorCode.FAILED.getCode(),cause);
     }
 
 }

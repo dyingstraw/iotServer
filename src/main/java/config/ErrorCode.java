@@ -7,7 +7,7 @@ public enum ErrorCode {
 
     ;
 
-    private int code;
+    private Integer code;
     private String message;
 
     public int getCode() {

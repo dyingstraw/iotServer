@@ -67,7 +67,7 @@ public class AuthHandle extends ChannelInboundHandlerAdapter {
                 );
                 return;
             }
-
+            // 单继状态下，直接认证
             authService.auth((AuthDTO) msg,ctx,this);
             // // 如果设备服务只有一台，或者当机只剩下1台服务，则开始认证
             // if (authService.isExit((AuthDTO) msg, true)) {
@@ -96,7 +96,7 @@ public class AuthHandle extends ChannelInboundHandlerAdapter {
             message.setVersion((int) 0);
 
             message.setData(RespDto.FAILED("还未认证"));
-            ChannelFuture f = ctx.writeAndFlush(message);
+            ChannelFuture f = ctx.writeAndFlush(Message.failed());
             f.addListener(new ChannelFutureListener() {
                 @Override
                 public void operationComplete(ChannelFuture future) throws Exception {
