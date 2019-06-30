@@ -52,6 +52,11 @@ public class AuthHandle extends ChannelInboundHandlerAdapter {
                 log.info("负载均衡：{}",ZookeeperUtil.getChildren());
                 /** 选取最适合的服务的地址，下发给设备，让设备重新认证**/
                 String best = runTimeStatusService.judgeBestServer();
+                // TODOne: 2019/6/30 如果得出结论，最佳负载服务就是本地，不做处理
+                if (best.equals(ConfigUtil.get("app.name"))){
+                    // 直接本地认证
+                    authService.auth((AuthDTO) msg,ctx,this);
+                }
                 ctx.writeAndFlush(new Message<String>(MessageType.REDIRECT.getKey(),best)).addListener(
                         new ChannelFutureListener() {
                             @Override
@@ -62,31 +67,29 @@ public class AuthHandle extends ChannelInboundHandlerAdapter {
                 );
                 return;
             }
-            // 如果设备服务只有一台，或者当机只剩下1台服务，则开始认证
-            if (authService.isExit((AuthDTO) msg, true)) {
-                ctx.pipeline().remove(this);
-                ChannelFuture f = ctx.writeAndFlush(Message.success());
-                f.addListener(new ChannelFutureListener() {
-                    @Override
-                    public void operationComplete(ChannelFuture future) throws Exception {
-                        log.info("认证成功");
-                    }
-                });
-            } else {
-                log.info("auth failed");
-                // Message<RespDto> message = new Message();
-                // message.setCmd(0);
-                // message.setVersion(0);
-                // message.setData(RespDto.FAILED("认证失败"));
-                ChannelFuture f = ctx.writeAndFlush(Message.failed());
-                f.addListener(new ChannelFutureListener() {
-                    @Override
-                    public void operationComplete(ChannelFuture future) throws Exception {
-                        log.info("认证失败");
-                        ctx.close();
-                    }
-                });
-            }
+
+            authService.auth((AuthDTO) msg,ctx,this);
+            // // 如果设备服务只有一台，或者当机只剩下1台服务，则开始认证
+            // if (authService.isExit((AuthDTO) msg, true)) {
+            //     ctx.pipeline().remove(this);
+            //     ChannelFuture f = ctx.writeAndFlush(Message.success());
+            //     f.addListener(new ChannelFutureListener() {
+            //         @Override
+            //         public void operationComplete(ChannelFuture future) throws Exception {
+            //             log.info("认证成功");
+            //         }
+            //     });
+            // } else {
+            //     log.info("auth failed");
+            //     ChannelFuture f = ctx.writeAndFlush(Message.failed());
+            //     f.addListener(new ChannelFutureListener() {
+            //         @Override
+            //         public void operationComplete(ChannelFuture future) throws Exception {
+            //             log.info("认证失败");
+            //             ctx.close();
+            //         }
+            //     });
+            // }
         } else {
             Message<RespDto> message = new Message();
             message.setCmd((int) 0);

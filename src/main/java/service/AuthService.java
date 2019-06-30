@@ -5,6 +5,8 @@ import config.Key;
 import config.MongoUtil;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelInboundHandlerAdapter;
 import lombok.extern.slf4j.Slf4j;
 import model.dto.AuthDTO;
 import model.message.Message;
@@ -23,6 +25,7 @@ import util.ZookeeperUtil;
  **/
 @Slf4j
 public class AuthService {
+
     private static AuthService instance = new AuthService();
 
 
@@ -54,7 +57,33 @@ public class AuthService {
         return false;
     }
 
-    public void auth(AuthDTO authDTO){
-
+    /**
+     * 认证服务
+     * @param authDTO
+     * @param ctx
+     * @param handler
+     */
+    public void auth(AuthDTO authDTO, ChannelHandlerContext ctx, ChannelInboundHandlerAdapter handler){
+        // 如果设备服务只有一台，或者当机只剩下1台服务，则开始认证
+        if (isExit(authDTO, true)) {
+            ctx.pipeline().remove(handler);
+            ChannelFuture f = ctx.writeAndFlush(Message.success());
+            f.addListener(new ChannelFutureListener() {
+                @Override
+                public void operationComplete(ChannelFuture future) throws Exception {
+                    log.info("认证成功");
+                }
+            });
+        } else {
+            log.info("auth failed");
+            ChannelFuture f = ctx.writeAndFlush(Message.failed());
+            f.addListener(new ChannelFutureListener() {
+                @Override
+                public void operationComplete(ChannelFuture future) throws Exception {
+                    log.info("认证失败");
+                    ctx.close();
+                }
+            });
+        }
     }
 }
