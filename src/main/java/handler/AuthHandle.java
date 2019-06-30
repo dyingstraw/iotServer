@@ -96,7 +96,7 @@ public class AuthHandle extends ChannelInboundHandlerAdapter {
             message.setVersion((int) 0);
 
             message.setData(RespDto.FAILED("还未认证"));
-            ChannelFuture f = ctx.writeAndFlush(Message.failed());
+            ChannelFuture f = ctx.writeAndFlush(Message.failed("unAuth"));
             f.addListener(new ChannelFutureListener() {
                 @Override
                 public void operationComplete(ChannelFuture future) throws Exception {

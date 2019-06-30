@@ -41,7 +41,17 @@ public class ConfigUtil {
         return resourceBundle;
     }
     public static String get(String key){
-       return getINSTANCE().resourceBundle.getString(key);
+        return getINSTANCE().resourceBundle.getString(key);
     }
+
+    /**
+     * 获取应用名称
+     * @return
+     */
+    public static String getAppName(){
+        return get("app.name");
+    }
+
+
 
 }

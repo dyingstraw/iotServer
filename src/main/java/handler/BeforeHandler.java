@@ -10,8 +10,10 @@ import io.netty.channel.ChannelInboundHandlerAdapter;
 import lombok.extern.slf4j.Slf4j;
 import model.dto.AuthDTO;
 import model.dto.BaseDTO;
+import model.dto.HeartDTO;
 import model.dto.RecordDTO;
 import model.message.Message;
+import model.message.MessageType;
 
 /**
  * @program: netty_study
@@ -34,6 +36,10 @@ public class BeforeHandler extends ChannelInboundHandlerAdapter {
         }else if (jo.getCmd()==1){
             RecordDTO recordDTO = JSONObject.parseObject(jo.getData(),new TypeReference<RecordDTO>(){});
             super.channelRead(ctx, recordDTO);
+        }else if ( MessageType.HEART.getKey().equals(jo.getCmd())){
+            //心跳包
+            HeartDTO heartDTO = JSONObject.parseObject(jo.getData(),new TypeReference<HeartDTO>(){});
+            super.channelRead(ctx,heartDTO);
         }
     }
 

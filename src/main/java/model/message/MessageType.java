@@ -10,6 +10,7 @@ public enum  MessageType {
     REDIRECT(3,"Redirect"),
     SEND(1,"send"),
     RESP(9,"resp"),
+    HEART(7,"heart"),
     CONTROL(8,"ctrl");
 
     private Integer key;
