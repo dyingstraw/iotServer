@@ -1,16 +1,12 @@
 package util;
 
-import com.sun.corba.se.impl.activation.ServerMain;
+
 import exception.CustomException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.zookeeper.*;
-import org.apache.zookeeper.data.Stat;
+
 
 import java.io.IOException;
-import java.net.Inet4Address;
-import java.net.NetworkInterface;
-import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.List;
 import java.util.Vector;
 import java.util.concurrent.CountDownLatch;

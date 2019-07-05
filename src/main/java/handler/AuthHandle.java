@@ -1,12 +1,11 @@
 package handler;
 
-import com.sun.deploy.config.Config;
+
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import lombok.extern.slf4j.Slf4j;
-import model.RunTimeStatus;
 import model.dto.AuthDTO;
 import model.dto.RespDto;
 import model.message.Message;
@@ -15,13 +14,8 @@ import service.AuthService;
 import service.BlanceService;
 import service.RunTimeStatusService;
 import service.impl.RunTimeStatusServiceImpl;
-import util.CommonUtil;
 import util.ConfigUtil;
-import util.RedisUtil;
 import util.ZookeeperUtil;
-
-import java.util.ArrayList;
-import java.util.Map;
 
 /**
  * @program: netty_study
@@ -63,6 +57,7 @@ public class AuthHandle extends ChannelInboundHandlerAdapter {
                             public void operationComplete(ChannelFuture future) throws Exception {
                                 ctx.close();
                             }
+
                         }
                 );
                 return;

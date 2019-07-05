@@ -36,6 +36,7 @@ public class RecordHandler extends ChannelInboundHandlerAdapter {
                 log.info(Thread.currentThread().toString());
                 // 更新在线状态
                 RedisUtil.getJedis().expire("dev_" + record.getDevId(), 60);
+                ctx.writeAndFlush(Message.success());
             }else {
                 ctx.writeAndFlush(Message.failed("long time no heart package!"));
                 ctx.close();
