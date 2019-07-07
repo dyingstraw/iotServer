@@ -32,7 +32,10 @@ public class RecordHandler extends ChannelInboundHandlerAdapter {
             // 否在，关闭物理连接
             if (RedisUtil.getJedis().exists("dev_"+record.getDevId())) {
                 log.info("send message {} to rabbitmq!", record);
+                // 发送至消息队列
                 RabbitMQUtil.sendAndClose(ConfigUtil.getAppName(), "hello", null, JSON.toJSONString(record).getBytes());
+                // 发布到redis话题
+                RedisUtil.getJedis().publish(ConfigUtil.get("app.publish"),JSON.toJSONString(record));
                 log.info(Thread.currentThread().toString());
                 // 更新在线状态
                 RedisUtil.getJedis().expire("dev_" + record.getDevId(), 60);

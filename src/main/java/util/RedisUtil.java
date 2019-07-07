@@ -30,7 +30,7 @@ public class RedisUtil   {
         JedisPoolConfig config = new JedisPoolConfig();
         config.setTestWhileIdle(false);
         config.setTimeBetweenEvictionRunsMillis(-1);
-        jedisPool=new JedisPool(config,"192.168.1.102",6379,3000,"dyingstraw");
+        jedisPool=new JedisPool(config,"192.168.1.102",6379,3000);
         log.info("redis is running");
     }
 
