@@ -1,5 +1,5 @@
 # iotServer
-iot server base redis, netty, Zookeeper
+iot server base on redis, netty, Zookeeper and rabbitmq
 
 
 
@@ -7,7 +7,7 @@ iot server base redis, netty, Zookeeper
 分布式物联网设备数据传输与控制平台
 # 项目开始时间：
 2018-12-01
-项目结束时间：
+# 项目结束时间：
 2019-07-01
 
 # 项目职责：
@@ -22,7 +22,7 @@ iot server base redis, netty, Zookeeper
 # 系统架构
 ![系统架构](img/system.png)
 # 开发轨迹
-![开发轨迹](img/开发轨迹.png)
+[开发轨迹](https://github.com/dyingstraw/iotServer/commits/master)
 # 设备认证流程
 ![dev](img/dev.png)
 
