@@ -40,7 +40,7 @@ JIT|HotSpot 64-Bit Tiered Compilers|
 
 ![jvm活动概况](img/jvm.png)
 
-[点击查看平台压力测试详情](img/mytest/index.html)
+[点击查看平台压力测试详情](htmlpreview.github.io/img/mytest/index.html)
 
 
 
