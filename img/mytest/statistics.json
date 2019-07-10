@@ -1,0 +1,32 @@
+{
+  "TCP取样器" : {
+    "transaction" : "TCP取样器",
+    "sampleCount" : 100000,
+    "errorCount" : 865,
+    "errorPct" : 0.865,
+    "meanResTime" : 35.423429999998966,
+    "minResTime" : 4.0,
+    "maxResTime" : 6700.0,
+    "pct1ResTime" : 21.0,
+    "pct2ResTime" : 26.0,
+    "pct3ResTime" : 40.0,
+    "throughput" : 68.8037098960376,
+    "receivedKBytesPerSec" : 2.930836468202365,
+    "sentKBytesPerSec" : 5.8616729364047
+  },
+  "Total" : {
+    "transaction" : "Total",
+    "sampleCount" : 100000,
+    "errorCount" : 865,
+    "errorPct" : 0.865,
+    "meanResTime" : 35.423429999998966,
+    "minResTime" : 4.0,
+    "maxResTime" : 6700.0,
+    "pct1ResTime" : 21.0,
+    "pct2ResTime" : 26.0,
+    "pct3ResTime" : 40.0,
+    "throughput" : 68.8037098960376,
+    "receivedKBytesPerSec" : 2.930836468202365,
+    "sentKBytesPerSec" : 5.8616729364047
+  }
+}

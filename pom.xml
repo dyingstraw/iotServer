@@ -48,6 +48,25 @@
                     <target>8</target>
                 </configuration>
             </plugin>
+
+<!--            <plugin>-->
+<!--                <groupId>org.apache.maven.plugins</groupId>-->
+<!--                <artifactId>maven-assembly-plugin</artifactId>-->
+<!--                <configuration>-->
+<!--                    &lt;!&ndash;   这个是assembly 所在位置  &ndash;&gt;-->
+<!--                    <descriptor>src/main/assembly.xml</descriptor>-->
+<!--                </configuration>-->
+<!--                <executions>-->
+<!--                    <execution>-->
+<!--                        <id>make-assembly</id>-->
+<!--                        <phase>package</phase>-->
+<!--                        <goals>-->
+<!--                            <goal>single</goal>-->
+<!--                        </goals>-->
+<!--                    </execution>-->
+<!--                </executions>-->
+<!--            </plugin>-->
+
         </plugins>
     </build>
     <dependencies>

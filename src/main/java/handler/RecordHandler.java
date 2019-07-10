@@ -26,25 +26,26 @@ import java.util.Date;
 public class RecordHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        if (RecordDTO.class.isInstance(msg)){
+        if (RecordDTO.class.isInstance(msg)) {
             RecordDTO record = (RecordDTO) msg;
             // 如果设备在线，则把记录发送到rabbitmq，并更新在线信息
             // 否在，关闭物理连接
             if (RedisUtil.getJedis().exists("dev_"+record.getDevId())) {
+            // if (true) {
                 log.info("send message {} to rabbitmq!", record);
                 // 发送至消息队列
-                RabbitMQUtil.sendAndClose(ConfigUtil.getAppName(), "hello", null, JSON.toJSONString(record).getBytes());
+                RabbitMQUtil.sendAndClose("iot@1_192.168.1.101", "hello", null, JSON.toJSONString(record).getBytes());
                 // 发布到redis话题
-                RedisUtil.getJedis().publish(ConfigUtil.get("app.publish"),JSON.toJSONString(record));
+                RedisUtil.getJedis().publish(ConfigUtil.get("app.publish"), JSON.toJSONString(record));
                 log.info(Thread.currentThread().toString());
                 // 更新在线状态
                 RedisUtil.getJedis().expire("dev_" + record.getDevId(), 60);
                 ctx.writeAndFlush(Message.success());
-            }else {
+            } else {
                 ctx.writeAndFlush(Message.failed("long time no heart package!"));
                 ctx.close();
             }
-        }else {
+        } else {
             super.channelRead(ctx, msg);
         }
     }
