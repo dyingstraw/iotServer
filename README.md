@@ -20,7 +20,7 @@ iot server base on redis, netty, Zookeeper and rabbitmq
  - 3、Redis发布订阅模型实时显示设备上传数据，并实现在应用层对设备反向控制； 
  - 4、应用层设备注册管理、用户注册登录管理、设备历史记录的分析与展示后台开发。
 # 系统架构
-![系统架构](img/system.png)
+![系统架构](img/system.jpg)
 # 开发轨迹
 [开发轨迹](https://github.com/dyingstraw/iotServer/commits/master)
 # 设备认证流程
