@@ -25,7 +25,8 @@ iot server base on redis, netty, Zookeeper and rabbitmq
 [开发轨迹](https://github.com/dyingstraw/iotServer/commits/master)
 # 设备认证流程
 ![dev](img/dev.png)
-
+# 设备状态转换图
+![设备状态转换](img/deviceStatus.jpg)
 # 单机单节点压力测试效果
 ### 节点配置
 名称|属性|备注
