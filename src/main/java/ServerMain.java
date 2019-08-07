@@ -1,6 +1,8 @@
 import handler.ChannelInitHandler;
 import io.netty.bootstrap.ServerBootstrap;
+import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
+import io.netty.channel.epoll.EpollEventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import model.RunTimeStatus;
@@ -30,11 +32,26 @@ public class ServerMain {
     private static final Condition STOP = LOCK.newCondition();
     public static void run(String[] args) {
         logger.debug("server init");
+        String osName = System.getProperty("os.name");
         ServerBootstrap bootstrap = new ServerBootstrap();
-        EventLoopGroup work = new NioEventLoopGroup();
-        EventLoopGroup childGroup = new NioEventLoopGroup();
+        // 优化不同
+        EventLoopGroup childGroup = null;
+        EventLoopGroup work =  null;
+        if (osName.contains("Linux")){
+            work = new EpollEventLoopGroup();
+            childGroup = new EpollEventLoopGroup(100);
+        }else {
+            work = new NioEventLoopGroup();
+            childGroup = new NioEventLoopGroup(100);
+        }
+
+
         try {
             bootstrap.group(work,childGroup)
+                    .option(ChannelOption.CONNECT_TIMEOUT_MILLIS,3000)
+                    .option(ChannelOption.TCP_NODELAY,true)
+                    .option(ChannelOption.SO_SNDBUF,1*1024)
+                    .option(ChannelOption.SO_RCVBUF,2*1024)
                     .channel(NioServerSocketChannel.class)
                     .childHandler(new ChannelInitHandler())
             .bind(8765).sync();
